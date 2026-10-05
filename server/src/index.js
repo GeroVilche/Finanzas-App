@@ -11,7 +11,7 @@ app.get('/api/health', async (req, res) => {
     await pool.query('SELECT 1');
     res.json({ status: 'ok', db: 'ok', timestamp: new Date().toISOString() });
   } catch (error) {
-    console.error('Error de conexión a la base:', error.message);
+    console.error('Error de conexión a la base:', error.code ?? error.message);
     res.status(503).json({ status: 'error', db: 'unreachable' });
   }
 });
