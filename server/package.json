@@ -4,14 +4,15 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-  "dev": "node --watch src/index.js",
-  "start": "node src/index.js"
-},
+    "dev": "node --env-file=../.env --watch src/index.js",
+    "start": "node src/index.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "pg": "^8.23.1"
   }
 }
