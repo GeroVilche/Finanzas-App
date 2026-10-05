@@ -1,0 +1,81 @@
+### Gasto válido
+POST http://localhost:3000/api/movements
+Content-Type: application/json
+
+{
+  "type": "expense",
+  "amount": 1525050,
+  "date": "2026-10-05",
+  "accountId": 1,
+  "categoryId": 2
+}
+
+### Monto negativo (debe dar 400)
+POST http://localhost:3000/api/movements
+Content-Type: application/json
+
+{
+  "type": "expense",
+  "amount": -500,
+  "date": "2026-10-05",
+  "accountId": 1,
+  "categoryId": 2
+}
+
+### Fecha mal escrita y tipo inválido (debe dar 400)
+POST http://localhost:3000/api/movements
+Content-Type: application/json
+
+{
+  "type": "gasto",
+  "amount": 1000,
+  "date": "05/10/2026",
+  "accountId": 1
+}
+
+### Transferencia válida
+POST http://localhost:3000/api/movements
+Content-Type: application/json
+
+{
+  "type": "transfer",
+  "amount": 500000,
+  "date": "2026-10-05",
+  "accountId": 1,
+  "toAccountId": 2
+}
+
+### Gasto sin categoría (debe dar 400)
+POST http://localhost:3000/api/movements
+Content-Type: application/json
+
+{
+  "type": "expense",
+  "amount": 1000,
+  "date": "2026-10-05",
+  "accountId": 1
+}
+
+### Gasto con categoría de ingreso (debe dar 400)
+POST http://localhost:3000/api/movements
+Content-Type: application/json
+
+{
+  "type": "expense",
+  "amount": 1000,
+  "date": "2026-10-05",
+  "accountId": 1,
+  "categoryId": 1
+}
+
+### Cuenta inexistente (debe dar 400)
+POST http://localhost:3000/api/movements
+Content-Type: application/json
+
+{
+  "type": "expense",
+  "amount": 1000,
+  "date": "2026-10-05",
+  "accountId": 999,
+  "categoryId": 2
+}
