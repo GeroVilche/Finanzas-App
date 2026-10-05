@@ -18,3 +18,22 @@ App web de finanzas personales para registrar ingresos, gastos, transferencias e
 - `server/` — API (backend)
 - `client/` — interfaz web (frontend)
 - `docs/` — documentación y bitácora de decisiones
+
+## Cómo correrlo en local
+
+Reqisitos: Node.js 24+, Docker Desktop.
+
+1. Copiar las variables de entorno y completarlas:
+```
+   cp .env.example .env
+```
+2. Levantar la base de datos:
+```
+   docker compose up -d
+```
+3. Levantar el servidor:
+```
+   cd server
+   npm install
+   npm run dev
+```
