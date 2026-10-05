@@ -1,10 +1,12 @@
 import express from 'express';
 import { pool } from './db.js';
+import movementsRouter from './routes/movements.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
 
 app.use(express.json());
+app.use('/api/movements', movementsRouter);
 
 app.get('/api/health', async (req, res) => {
   try {
