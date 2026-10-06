@@ -1,0 +1,5 @@
+### Saludo con nombre
+GET http://localhost:3000/api/saludo?nombre=Gero
+
+### Saludo sin nombre
+GET http://localhost:3000/api/saludo

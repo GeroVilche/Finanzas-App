@@ -18,6 +18,12 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
+app.get('/api/saludo', (req, res) => {
+  const nombre = req.query.nombre ?? 'Desconocido';
+  res.json({ mensaje: `Hola, ${nombre}` });
+});
+
+
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
