@@ -41,3 +41,16 @@ Registro de las decisiones técnicas del proyecto: qué opciones evalué, cuál 
 - **Por qué:**
   - Los enteros no tienen errores de redondeo: $1.250,50 se guarda como 125050, y la app lo convierte a pesos solo para mostrarlo.
   - `INTEGER` llega hasta unos 2.100 millones de centavos ($21 millones), un límite que con la inflación se puede superar. `BIGINT` permite montos muchísimo más grandes.
+
+## 004 — Traer nombres de cuentas y categorías con JOIN
+
+- **Fecha:** 2026-10-06
+- **Contexto:** Para mostrar la lista de movimientos del mes necesitaba, además de los datos de cada movimiento, el nombre de su cuenta, de su categoría y de la cuenta destino. La tabla `movements` solo guarda los ids (por ejemplo `account_id: 1`). Si buscaba cada nombre con una consulta aparte, con 100 movimientos terminaría haciendo unas 300 consultas a la base (el problema conocido como "N+1 consultas"). Necesitaba traer todo en una sola consulta, sin perder los movimientos que no tienen categoría (transferencias) o cuenta destino (ingresos y gastos).
+- **Opciones evaluadas:**
+  - Una consulta aparte por cada nombre.
+  - `JOIN` para todas las relaciones.
+  - `JOIN` para la cuenta de origen y `LEFT JOIN` para la categoría y la cuenta destino.
+- **Decisión:** `JOIN` para la cuenta de origen (siempre existe) y `LEFT JOIN` para la categoría y la cuenta destino (pueden ser `NULL`).
+- **Por qué:**
+  - Un JOIN une las tablas en una sola consulta: además del movimiento, trae el nombre de su cuenta y de su categoría.
+  - Con `JOIN` común en todas, las transferencias desaparecerían de la lista por no tener categoría. `LEFT JOIN` las incluye y completa con `NULL`.

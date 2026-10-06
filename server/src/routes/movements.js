@@ -41,6 +41,10 @@ const movementSchema = z
     }
   });
 
+const listQuerySchema = z.object({
+  month: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'El mes debe tener formato AAAA-MM'),
+  });
+
 // ===== 4. Función auxiliar =====
 function toMovementResponse(row) {
   return {
@@ -49,8 +53,11 @@ function toMovementResponse(row) {
     amount: Number(row.amount),
     date: row.date,
     accountId: row.account_id,
+    accountName: row.account_name,
     toAccountId: row.to_account_id,
+    toAccountName: row.to_account_name,
     categoryId: row.category_id,
+    categoryName: row.category_name,
     note: row.note,
     createdAt: row.created_at,
   };
@@ -99,6 +106,40 @@ router.post('/', async (req, res) => {
     res.status(201).json(toMovementResponse(rows[0]));
   } catch (error) {
     console.error('Error creando movimiento:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+// ===== GET /api/movements?month=AAAA-MM =====
+router.get('/', async (req, res) => {
+  const result = listQuerySchema.safeParse(req.query);
+  if (!result.success) {
+    return res.status(400).json({ error: 'Parámetros inválidos', details: result.error.issues });
+  }
+
+  const firstDay = `${result.data.month}-01`;
+
+  try {
+    const { rows } = await pool.query(
+      `SELECT m.id, m.type, m.amount, m.date::text AS date,
+              m.account_id, a.name AS account_name,
+              m.to_account_id, ta.name AS to_account_name,
+              m.category_id, c.name AS category_name,
+              m.note, m.created_at
+       FROM movements m
+       JOIN accounts a ON a.id = m.account_id
+       LEFT JOIN accounts ta ON ta.id = m.to_account_id
+       LEFT JOIN categories c ON c.id = m.category_id
+       WHERE m.user_id = $1
+         AND m.date >= $2::date
+         AND m.date < $2::date + INTERVAL '1 month'
+       ORDER BY m.date DESC, m.id DESC`,
+      [USER_ID, firstDay],
+    );
+
+    res.json(rows.map(toMovementResponse));
+  } catch (error) {
+    console.error('Error listando movimientos:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
