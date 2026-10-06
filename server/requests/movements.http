@@ -79,3 +79,28 @@ Content-Type: application/json
   "accountId": 999,
   "categoryId": 2
 }
+
+### Gasto de septiembre (para probar el filtro)
+POST http://localhost:3000/api/movements
+Content-Type: application/json
+
+{
+  "type": "expense",
+  "amount": 850000,
+  "date": "2026-09-20",
+  "accountId": 2,
+  "categoryId": 4,
+  "note": "SUBE del mes"
+}
+
+### Listar octubre
+GET http://localhost:3000/api/movements?month=2026-10
+
+### Listar septiembre
+GET http://localhost:3000/api/movements?month=2026-09
+
+### Mes inválido (debe dar 400)
+GET http://localhost:3000/api/movements?month=2026-13
+
+### Sin mes (debe dar 400)
+GET http://localhost:3000/api/movements
